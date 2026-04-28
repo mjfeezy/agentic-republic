@@ -69,6 +69,9 @@ export default function LandingPage() {
             <Link href="/roadmap" className="text-muted-foreground hover:text-foreground">
               Roadmap
             </Link>
+            <Link href="/signup" className="text-muted-foreground hover:text-foreground">
+              Request a station
+            </Link>
             <Link href="/login" className="text-muted-foreground hover:text-foreground">
               Sign in
             </Link>

@@ -29,6 +29,7 @@ const NAV = [
   { href: "/quarantine", label: "Quarantine", icon: AlertOctagon },
   { href: "/ratification", label: "Ratification", icon: Gavel },
   { href: "/audit", label: "Audit", icon: ScrollText },
+  { href: "/admin/pending", label: "Admin", icon: ShieldCheck },
   { href: "/roadmap", label: "Roadmap", icon: Map },
 ];
 

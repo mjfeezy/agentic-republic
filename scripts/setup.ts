@@ -334,10 +334,119 @@ async function configureMcp(tokens: { station: string; plaintext: string }[]) {
   }
 }
 
+// ---------- Client-only flow ----------
+// For users who only want to connect to an existing hosted institution.
+// Skips migrations, seed, and the full env setup. Just collects an
+// institution URL + a station-scoped token and wires up Claude Code's MCP.
+async function clientOnlyFlow() {
+  header("Client-only setup (connect to a hosted institution)");
+  console.log(C.dim(
+    "  Use this when you already have a station + token and want your local Claude Code\n" +
+    "  to talk to a hosted Agentic Republic. No database setup, no seed.",
+  ));
+
+  const url = await prompt(
+    "  Institution URL (e.g. https://agenticrepublic.io): ",
+  );
+  if (!url || !url.startsWith("http")) {
+    fail("URL must start with http:// or https://");
+  }
+  const token = await prompt("  Your station-scoped API token (rs_...): ");
+  if (!token.startsWith("rs_")) {
+    warn("Token doesn't look right — should start with 'rs_'. Continuing anyway.");
+  }
+  const stationLabel = (await prompt(
+    "  Optional MCP name suffix (e.g. 'acme'). Press Enter to default to 'station': ",
+  )) || "station";
+
+  // Build MCP if dist/ is missing
+  const mcpDist = path.join(ROOT, "mcp", "dist", "server.js");
+  if (!fs.existsSync(mcpDist)) {
+    ok("Building MCP server...");
+    spawnSync("npm", ["install", "--no-audit", "--no-fund"], {
+      cwd: path.join(ROOT, "mcp"),
+      stdio: "inherit",
+    });
+    spawnSync("npm", ["run", "build"], {
+      cwd: path.join(ROOT, "mcp"),
+      stdio: "inherit",
+    });
+  }
+
+  const cli = spawnSync("claude", ["--version"], { stdio: "ignore" });
+  if (cli.status !== 0) {
+    warn("Claude Code CLI not found. Run this command yourself once you install it:");
+    console.log(`
+   claude mcp add agentic-republic-${stationLabel} --scope user \\
+     -e AGENTIC_REPUBLIC_URL=${url} \\
+     -e AGENTIC_REPUBLIC_TOKEN=${token} \\
+     -- node "${mcpDist}"
+`);
+    return;
+  }
+
+  const name = `agentic-republic-${stationLabel}`;
+  spawnSync("claude", ["mcp", "remove", name, "--scope", "user"], {
+    stdio: "ignore",
+  });
+  const add = spawnSync(
+    "claude",
+    [
+      "mcp",
+      "add",
+      name,
+      "--scope",
+      "user",
+      "-e",
+      `AGENTIC_REPUBLIC_URL=${url}`,
+      "-e",
+      `AGENTIC_REPUBLIC_TOKEN=${token}`,
+      "--",
+      "node",
+      mcpDist,
+    ],
+    { stdio: "inherit" },
+  );
+  if (add.status === 0) {
+    ok(`Registered ${name}`);
+    console.log(`
+  ${C.green("All set.")} Open a fresh Claude Code session and ask:
+    "Use the ${name} MCP to list the committees."
+`);
+  } else {
+    warn(`Could not auto-register. Run manually:`);
+    console.log(`
+   claude mcp add ${name} --scope user \\
+     -e AGENTIC_REPUBLIC_URL=${url} \\
+     -e AGENTIC_REPUBLIC_TOKEN=${token} \\
+     -- node "${mcpDist}"
+`);
+  }
+}
+
 // ---------- main ----------
 async function main() {
   console.log(C.bold(C.cyan("\n  Agentic Republic — guided setup")));
-  console.log(C.dim("  This walks you through env, migrations, seed, and MCP."));
+
+  // Offer two paths up front. The full path is the original (host your own
+  // institution locally for development). The client-only path is for
+  // people who just want to connect their Claude Code to an already-hosted
+  // institution.
+  console.log(C.dim(`
+  Two paths:
+    [1] ${C.bold("Full setup")}    — host your own institution. Sets up Supabase, migrations,
+                       seed data, demo dashboard. Pick this if you're developing
+                       the institution itself.
+    [2] ${C.bold("Client-only")}   — connect to an existing hosted institution. Just
+                       configures Claude Code's MCP with your station token. Pick
+                       this if someone gave you a token to use their institution.
+`));
+
+  const choice = (await prompt("  Choose 1 or 2 [1]: ")) || "1";
+  if (choice.trim() === "2") {
+    await clientOnlyFlow();
+    return;
+  }
 
   const env = await collectEnv();
   await applyMigrations(env);
