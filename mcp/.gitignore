@@ -1,0 +1,5 @@
+# Pre-built MCP server is committed so consumers don't need to run `npm
+# run build` after cloning. Source-map and the compiled JS go to dist/.
+node_modules
+*.log
+*.tsbuildinfo

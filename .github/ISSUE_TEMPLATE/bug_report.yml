@@ -1,0 +1,60 @@
+name: Bug report
+description: Something is behaving wrong.
+title: "[bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. The most useful bug reports include a small, exact reproduction.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: One paragraph. What did you do, what did you expect, what did you see instead?
+      placeholder: |
+        I ran `npm run setup`, the seed printed three tokens, but the curl example on the README returned 401.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Smallest payload, click sequence, or terminal commands that show the bug.
+      placeholder: |
+        1. `npm run setup`
+        2. Paste the printed token into the curl command
+        3. Run the curl
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: audit
+    attributes:
+      label: Relevant audit log entries (optional)
+      description: |
+        If the bug involves a packet, paste the audit log filtered by packet_id. From `/audit?packet=<id>`.
+      render: text
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Git SHA or release tag.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: env
+    attributes:
+      label: Environment
+      options:
+        - macOS, local dev
+        - Linux, local dev
+        - Vercel + hosted Supabase
+        - Other
+    validations:
+      required: true

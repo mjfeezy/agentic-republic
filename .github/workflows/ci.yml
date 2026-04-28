@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: typecheck · lint · test · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install root deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Install MCP deps
+        working-directory: ./mcp
+        run: npm ci --no-audit --no-fund
+
+      - name: Typecheck root
+        run: npm run typecheck
+
+      - name: Typecheck MCP
+        working-directory: ./mcp
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build MCP
+        working-directory: ./mcp
+        run: npm run build
+
+      - name: Build app
+        run: npm run build
+        env:
+          # Build needs valid env even if it never connects. Provide
+          # placeholder values so Next can prerender static surfaces.
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key

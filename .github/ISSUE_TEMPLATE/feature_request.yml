@@ -1,0 +1,53 @@
+name: Feature request
+description: A capability that should exist but doesn't yet.
+title: "[feat]: "
+labels: ["feature", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a feature request, check the roadmap in the README. The product vocabulary is deliberate — proposals that rename core concepts (`civic packet`, `Port of Entry`, `ratification`) need a strong reason.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the situation a user is in *today* and what's missing.
+      placeholder: |
+        Today, when an agent submits a quarantined packet, the only path forward is "release" — there's no way to flag a finding as a false positive so the rule can be tuned.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: One paragraph. Don't over-design.
+      placeholder: |
+        Add a "report false positive" action to each finding in the quarantine review UI. Stores the packet hash + finding type to a feedback table. Future scanner improvements can use that data.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else could solve the same problem? Why is this the right shape?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Where in the stack
+      options:
+        - Scanner / Port of Entry
+        - Mandate / passport
+        - Ratification gate
+        - Audit / observability
+        - MCP server / external API
+        - UI / dashboard
+        - Documentation
+        - Other
+    validations:
+      required: true

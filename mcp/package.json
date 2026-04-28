@@ -1,0 +1,27 @@
+{
+  "name": "agentic-republic-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MCP server exposing the Agentic Republic Coding Agent Congress as tools for any MCP-compatible AI agent (Claude Code, Cursor, Claude Desktop).",
+  "type": "module",
+  "bin": {
+    "agentic-republic-mcp": "dist/server.js"
+  },
+  "scripts": {
+    "dev": "tsx server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=18.18"
+  }
+}

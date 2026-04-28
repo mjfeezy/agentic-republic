@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Agentic Republic brand palette
+ * --------------------------------
+ *  Republic Navy        #0B1D33   216 65% 12%
+ *  Civic Graphite       #2A2F3A   218 16% 20%
+ *  Institutional Steel  #5D6773   213 11% 41%
+ *  Marble Ivory         #F2EFE8    36 26% 93%
+ *  Parchment            #E7E3D7    40 26% 88%
+ *  Diplomatic Teal      #0E6B6F   183 78% 24%
+ *  Signet Gold          #B8A57A    38 30% 60%
+ */
+
+:root {
+  /* Backgrounds */
+  --background: 36 26% 93%;          /* Marble Ivory */
+  --foreground: 216 65% 12%;         /* Republic Navy */
+
+  --card: 0 0% 100%;
+  --card-foreground: 216 65% 12%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 216 65% 12%;
+
+  /* Brand primary */
+  --primary: 216 65% 12%;            /* Republic Navy */
+  --primary-foreground: 36 26% 93%;  /* Marble Ivory */
+
+  --secondary: 40 26% 88%;           /* Parchment */
+  --secondary-foreground: 216 65% 12%;
+
+  --muted: 40 22% 90%;
+  --muted-foreground: 213 11% 41%;   /* Institutional Steel */
+
+  --accent: 38 30% 60%;              /* Signet Gold */
+  --accent-foreground: 216 65% 12%;
+
+  --destructive: 0 65% 42%;
+  --destructive-foreground: 36 26% 96%;
+
+  --border: 213 14% 80%;
+  --input: 213 14% 80%;
+  --ring: 183 78% 24%;               /* Diplomatic Teal */
+
+  /* Civic semantic colors */
+  --civic-ink: 216 65% 12%;          /* Republic Navy */
+  --civic-graphite: 218 16% 20%;     /* Civic Graphite */
+  --civic-steel: 213 11% 41%;        /* Institutional Steel */
+  --civic-ivory: 36 26% 93%;         /* Marble Ivory */
+  --civic-parchment: 40 26% 88%;     /* Parchment */
+  --civic-seal: 216 65% 12%;         /* Republic Navy as seal */
+  --civic-teal: 183 78% 24%;         /* Diplomatic Teal */
+  --civic-gold: 38 30% 60%;          /* Signet Gold */
+  --civic-warn: 38 60% 42%;          /* tinted gold for warnings */
+  --civic-danger: 0 65% 42%;
+  --civic-ok: 183 78% 24%;           /* Diplomatic Teal stands in as success */
+
+  --radius: 0.5rem;
+
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-serif: var(--font-serif-display), "Source Serif 4", Cormorant, Georgia,
+    serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.dark {
+  --background: 216 60% 8%;
+  --foreground: 36 26% 94%;
+  --card: 216 50% 11%;
+  --card-foreground: 36 26% 94%;
+  --popover: 216 50% 11%;
+  --popover-foreground: 36 26% 94%;
+  --primary: 36 26% 94%;
+  --primary-foreground: 216 65% 12%;
+  --secondary: 218 16% 20%;
+  --secondary-foreground: 36 26% 94%;
+  --muted: 218 16% 16%;
+  --muted-foreground: 213 11% 65%;
+  --accent: 38 30% 55%;
+  --accent-foreground: 216 65% 12%;
+  --destructive: 0 65% 50%;
+  --destructive-foreground: 36 26% 96%;
+  --border: 218 16% 22%;
+  --input: 218 16% 22%;
+  --ring: 38 30% 60%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle paper texture used on landing + login */
+.bg-parchment {
+  background-color: hsl(var(--civic-ivory));
+  background-image:
+    radial-gradient(hsl(213 14% 70% / 0.18) 1px, transparent 1px),
+    radial-gradient(hsl(213 14% 70% / 0.10) 1px, transparent 1px);
+  background-size: 28px 28px, 14px 14px;
+  background-position: 0 0, 7px 7px;
+}
+
+/* Passport / ID card — embossed Republic Navy */
+.passport-card {
+  background:
+    radial-gradient(circle at 80% 0%, hsl(216 60% 22% / 0.6), transparent 55%),
+    radial-gradient(circle at 0% 100%, hsl(38 30% 60% / 0.12), transparent 60%),
+    linear-gradient(135deg, hsl(216 65% 14%) 0%, hsl(216 65% 10%) 60%, hsl(218 16% 12%) 100%);
+  color: hsl(36 26% 94%);
+  position: relative;
+  overflow: hidden;
+}
+.passport-card::after {
+  /* engine-turn guilloche pattern hint */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    hsl(38 30% 60% / 0.04) 0 1px,
+    transparent 1px 14px
+  );
+  pointer-events: none;
+}
+
+/* Status badge dots */
+.status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  margin-right: 0.4rem;
+}
+
+.checkpoint-line {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--border)) 50%,
+    transparent 50%
+  );
+  background-size: 8px 2px;
+  background-repeat: repeat-x;
+  background-position: center;
+  height: 2px;
+}
+
+/* Brand display text — small caps tracking for "GOVERNANCE. PROTOCOL. TRUST." */
+.brand-imprint {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Diplomatic teal-on-navy small label */
+.kicker {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: hsl(var(--civic-teal));
+  font-weight: 500;
+}
