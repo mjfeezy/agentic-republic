@@ -17,7 +17,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          # Note: no `cache: "npm"` — this repo doesn't commit a package-lock.json
+          # because some transitive deps choke npm 11's resolver. Caching is opt-in
+          # later when we pin a clean lockfile.
 
       - name: Install root deps
         run: npm install --no-audit --no-fund
