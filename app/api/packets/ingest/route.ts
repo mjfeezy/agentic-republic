@@ -42,6 +42,32 @@ export async function POST(req: Request) {
     );
   }
 
+  // Enforce per-station participation mode: 'answer'-only stations cannot
+  // submit packets. The Republic only works if the rules are observable —
+  // refuse loudly with an explanation rather than silently ignore.
+  const mode = (auth.station as { participation_mode?: string })
+    .participation_mode;
+  if (mode === "answer") {
+    return NextResponse.json(
+      {
+        error:
+          "This station's participation mode is 'answer'. It can respond to others' packets but cannot submit its own. Update the station's participation_mode to 'ask' or 'both' to enable submission.",
+      },
+      { status: 403 },
+    );
+  }
+  // Refuse pending stations too — the approval gate must be passed before
+  // the institution accepts traffic.
+  const status = (auth.station as { approval_status?: string }).approval_status;
+  if (status && status !== "active") {
+    return NextResponse.json(
+      {
+        error: `This station's approval_status is '${status}'. Stations must be approved before they can submit packets.`,
+      },
+      { status: 403 },
+    );
+  }
+
   let payload: z.infer<typeof ingestSchema>;
   try {
     const json = await req.json();

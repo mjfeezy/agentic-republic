@@ -155,11 +155,13 @@ async function seed() {
         "private architecture",
         "unreleased roadmap",
       ],
+      participation_mode: "both",
+      approval_status: "active",
     },
     {
       name: "Northstar Monorepo",
       description:
-        "Large pnpm monorepo with intermittent CI flakiness and aggressive caching.",
+        "Large pnpm monorepo with intermittent CI flakiness and aggressive caching. Mature platform team — happy to answer, doesn't ask much.",
       station_type: "software_repository",
       allowed_share_categories: [
         "anonymized failure patterns",
@@ -171,11 +173,15 @@ async function seed() {
         "infra credentials",
         "customer data",
       ],
+      // Demonstrates the answer-only mode. Northstar's MCP will only see the
+      // response-side tools.
+      participation_mode: "answer",
+      approval_status: "active",
     },
     {
       name: "Atlas Support Tools",
       description:
-        "Internal support tooling app. Strict PII boundaries because tools touch customer records.",
+        "Internal support tooling app. Strict PII boundaries because tools touch customer records. New to the institution — consuming first, contributing later.",
       station_type: "software_repository",
       allowed_share_categories: [
         "general workflow lessons",
@@ -188,6 +194,9 @@ async function seed() {
         "ticket bodies",
         "internal email threads",
       ],
+      // Demonstrates the ask-only mode. Atlas's MCP will only see submit_civic_packet etc.
+      participation_mode: "ask",
+      approval_status: "active",
     },
   ];
   const { data: stations, error: sErr } = await admin

@@ -92,9 +92,14 @@ export interface Station {
   station_type: string;
   allowed_share_categories: string[];
   prohibited_share_categories: string[];
+  participation_mode: ParticipationMode;
+  approval_status: ApprovalStatus;
   created_at: string;
   updated_at: string;
 }
+
+export type ParticipationMode = "ask" | "answer" | "both";
+export type ApprovalStatus = "pending" | "active" | "rejected" | "suspended";
 
 export interface Representative {
   id: string;

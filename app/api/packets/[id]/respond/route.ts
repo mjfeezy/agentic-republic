@@ -42,6 +42,29 @@ export async function POST(
     );
   }
 
+  // Mirror of the ingest endpoint's check. 'ask'-only stations consume the
+  // institution; they can't respond to others.
+  const mode = (auth.station as { participation_mode?: string })
+    .participation_mode;
+  if (mode === "ask") {
+    return NextResponse.json(
+      {
+        error:
+          "This station's participation mode is 'ask'. It can submit its own packets but cannot respond to others. Update participation_mode to 'answer' or 'both' to enable responding.",
+      },
+      { status: 403 },
+    );
+  }
+  const status = (auth.station as { approval_status?: string }).approval_status;
+  if (status && status !== "active") {
+    return NextResponse.json(
+      {
+        error: `This station's approval_status is '${status}'. Stations must be approved before they can respond.`,
+      },
+      { status: 403 },
+    );
+  }
+
   // Confirm the packet exists and is published.
   const { data: packet } = await admin
     .from("civic_packets")
